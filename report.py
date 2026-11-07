@@ -15,8 +15,9 @@ OFFSET_FILE = BASE_DIR / "llm/honeypot_state.json"
 TEMPLATE_FILE = BASE_DIR / "llm/template.html"
 OUTPUT_FILE = BASE_DIR / "site/report.html"
 ARCHIVE_DIR = BASE_DIR / "site/archive"
-LLM_LOG_FILE = BASE_DIR / "llm/honeybot.log"
+LLM_LOG_FILE = BASE_DIR / "logs/honeybot.log"
 IGNORED_IPS = {"63.155.49.149", "127.0.0.1"} #ignore certain ips, this way it ignores the your own, so shh
+CRON_LOG_FILE = BASE_DIR / "llm/report_cron.log"
 
 #llm setup
 MODEL = "honeybot" #uses qwen with custom prompt and parameters
@@ -30,6 +31,11 @@ log.setLevel(logging.DEBUG)
 handler = logging.FileHandler(LLM_LOG_FILE)
 handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
 log.addHandler(handler)
+
+#this is for the cron job to actuall get the info
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
+log.addHandler(stream_handler)
 
 #Handles open, read, and offset persistence for the JSONL event log
 class LogReader:
@@ -75,6 +81,8 @@ _PROMPT_TEMPLATE = """\
 Analyze the following honeypot events and respond per your instructions. \
 You must respond ONLY with a valid JSON object. No markdown, no headers, no commentary. \
 The JSON objects will be loaded into a template.html page so they need to be valid to be rendered correctly. \
+All string values MUST use double quotes. If a string value contains double quotes, escape them as \\". \
+Never use single quotes anywhere in the JSON.\
 Start your response with {{ and end with }}.
 
 Events:
@@ -92,7 +100,7 @@ def extract_and_fix_json(raw: str):
 
     #extract html_additions value and encodes it safely
     match = re.search(r'"html_additions"\s*:\s*[\'"](.+?)[\'"](\s*[},])', raw, flags=re.DOTALL)
-    
+
     if match:
         safe_value = json.dumps(match.group(1).strip("'"))
         raw = raw[:match.start()] + f'"html_additions": {safe_value}' + match.group(2) + raw[match.end():]

@@ -2,6 +2,7 @@
 import json
 import re
 from pathlib import Path
+from database import init_db, save_events
 
 # --- Absolute paths based on script location  ---
 BASE_DIR = Path(__file__).resolve().parent
@@ -164,14 +165,22 @@ def main():
 
     # Advance offset by the number of bytes we consumed from *new_bytes*
     consumed_from_new = max(0, len(parse_bytes) - len(carry_bytes))
-    save_offset(last_offset + consumed_from_new)
+    #save_offset(last_offset + consumed_from_new)
 
     if not new_events:
+        save_offset(last_offset + consumed_from_new)
         return
+    init_db()
+    saved_count = save_events(new_events)
 
     with OUTPUT_FILE.open("a", encoding="utf-8") as w:
         for evt in new_events:
             w.write(json.dumps(evt) + "\n")
+
+    save_offset(last_offset + consumed_from_new)
+
+    print(f"[parser] saved {saved_count} events to SQLite")
+    print(f"[parser] appended {len(new_events)} events to {OUTPUT_FILE}")
 
     print(f"[parser] appended {len(new_events)} events to {OUTPUT_FILE}")
 
