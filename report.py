@@ -24,12 +24,17 @@ MAX_EVENTS = 6
 LLM_TIMEOUT = 600  #in seconds, adjust to longer as need be, same for max events
 CLIENT = ollama.Client(host="http://localhost:11434", timeout=LLM_TIMEOUT)
 
-#log setup 
+#log setup
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 handler = logging.FileHandler(LLM_LOG_FILE)
 handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
 log.addHandler(handler)
+
+#this is for the cron job to actuall get the info
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
+log.addHandler(stream_handler)
 
 #Handles open, read, and offset persistence for the JSONL event log
 class LogReader:
@@ -92,7 +97,7 @@ def extract_and_fix_json(raw: str):
 
     #extract html_additions value and encodes it safely
     match = re.search(r'"html_additions"\s*:\s*[\'"](.+?)[\'"](\s*[},])', raw, flags=re.DOTALL)
-    
+
     if match:
         safe_value = json.dumps(match.group(1).strip("'"))
         raw = raw[:match.start()] + f'"html_additions": {safe_value}' + match.group(2) + raw[match.end():]
@@ -180,7 +185,7 @@ def main():
 
     #rotate archive slots 1-24 and will drop oldest
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     for i in range(23, 0, -1):
         src = ARCHIVE_DIR / f"report_{i:02d}.html"
         if src.exists():
@@ -203,4 +208,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
