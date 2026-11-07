@@ -65,4 +65,7 @@ Rules:
 - html_additions must use \n for newlines and two spaces for indentation — never literal newlines or unescaped control characters inside the JSON string value. The JSON value must remain on a single logical line from the parser's perspective
 - html_additions JSON value must be wrapped in double quotes — never single quotes on the outside
 - Output must always be valid JSON
+- All strings must use double quotes
+- If a string value contains double quotes, escape them as \\
+- Never use single quotes anywhere in the JSON
 """

@@ -15,8 +15,9 @@ OFFSET_FILE = BASE_DIR / "llm/honeypot_state.json"
 TEMPLATE_FILE = BASE_DIR / "llm/template.html"
 OUTPUT_FILE = BASE_DIR / "site/report.html"
 ARCHIVE_DIR = BASE_DIR / "site/archive"
-LLM_LOG_FILE = BASE_DIR / "llm/honeybot.log"
+LLM_LOG_FILE = BASE_DIR / "logs/honeybot.log"
 IGNORED_IPS = {"63.155.49.149", "127.0.0.1"} #ignore certain ips, this way it ignores the your own, so shh
+CRON_LOG_FILE = BASE_DIR / "llm/report_cron.log"
 
 #llm setup
 MODEL = "honeybot" #uses qwen with custom prompt and parameters
@@ -24,7 +25,7 @@ MAX_EVENTS = 6
 LLM_TIMEOUT = 600  #in seconds, adjust to longer as need be, same for max events
 CLIENT = ollama.Client(host="http://localhost:11434", timeout=LLM_TIMEOUT)
 
-#log setup
+#log setup 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 handler = logging.FileHandler(LLM_LOG_FILE)
@@ -80,6 +81,8 @@ _PROMPT_TEMPLATE = """\
 Analyze the following honeypot events and respond per your instructions. \
 You must respond ONLY with a valid JSON object. No markdown, no headers, no commentary. \
 The JSON objects will be loaded into a template.html page so they need to be valid to be rendered correctly. \
+All string values MUST use double quotes. If a string value contains double quotes, escape them as \\". \
+Never use single quotes anywhere in the JSON.\
 Start your response with {{ and end with }}.
 
 Events:
@@ -185,7 +188,7 @@ def main():
 
     #rotate archive slots 1-24 and will drop oldest
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
-
+    
     for i in range(23, 0, -1):
         src = ARCHIVE_DIR / f"report_{i:02d}.html"
         if src.exists():
@@ -208,3 +211,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

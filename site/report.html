@@ -16,58 +16,53 @@
     <div class="dashboard-content">
 
       <h1>Honeypot Threat Dashboard</h1>
-      <p class="subtitle">Generated: 2026-03-06 05:36:16 UTC</p>
+      <p class="subtitle">Generated: 2026-11-07 06:06:29 UTC</p>
 
       <div class="dashboard-grid">
 
         <div class="home-container wide" style="grid-column: 1;">
           <h2>Summary</h2>
-          <p>The honeypot detected multiple GET requests from a single crawler bot, &#x27;SiteCheckerBotCrawler&#x27;, probing the root directory of sudo-cheese.org. The bot is likely performing a generic site scan to gather information for potential vulnerabilities or exposing sensitive files. Given its repetitive nature and lack of specific targeting, it appears to be part of an automated scanning process rather than a targeted attack.</p>
+          <p>The attacker is likely using multiple search bots to probe for sensitive environment files, possibly targeting configuration details from staging or development environments. This behavior suggests a broad scan rather than a targeted attack, with the primary goal of gathering credentials and configurations.</p>
         </div>
 
         <div class="home-container wide" style="grid-column: 2;">
           <h2>Grouped Activity</h2>
           <div class="activity-grid">
-            <div class="ip-block"><div class="ip-addr">46.224.68.12</div><p class="ip-meta">DE &mdash; 2026-03-04T21:15:20Z (PST 2026-03-04T13:15:20)</p><p class="ip-desc">Repeated GET requests to the root directory.</p><ul class="indicators"><li>GET / at sudo-cheese.org</li></ul></div>
-<div class="ip-block"><div class="ip-addr">78.47.62.212</div><p class="ip-meta">DE &mdash; 2026-03-04T21:15:20Z (PST 2026-03-04T13:15:20)</p><p class="ip-desc">Single GET request to the root directory.</p><ul class="indicators"><li>GET / at sudo-cheese.org</li></ul></div>
-<div class="ip-block"><div class="ip-addr">167.235.227.57</div><p class="ip-meta">DE &mdash; 2026-03-04T21:15:20Z (PST 2026-03-04T13:15:20)</p><p class="ip-desc">Single GET request to the root directory.</p><ul class="indicators"><li>GET / at sudo-cheese.org</li></ul></div>
-<div class="ip-block"><div class="ip-addr">91.99.217.172</div><p class="ip-meta">DE &mdash; 2026-03-04T21:15:20Z (PST 2026-03-04T13:15:20)</p><p class="ip-desc">Repeated GET requests to the root directory.</p><ul class="indicators"><li>GET / at sudo-cheese.org</li></ul></div>
+            <div class="ip-block"><div class="ip-addr">34.53.201.131</div><p class="ip-meta">Belgium &mdash; 2026-11-03T19:51:53Z (PST 2026-11-03 07:51:53)</p><p class="ip-desc">Probing for sensitive environment files across different stages (staging, development).</p><ul class="indicators"><li>GET /ses.env at 21:51:53</li><li>GET /.env.staging at 21:51:53</li><li>GET /config.env at 21:51:53</li><li>GET /public/.env at 21:51:53</li><li>GET /sendgrid.env at 21:51:53</li><li>GET /.env.development at 21:51:53</li></ul></div>
           </div>
         </div>
 
         <div class="home-container wide" style="grid-column: 1 / 3;">
           <h2>Expansion Notes</h2>
-          <p>The crawler bot is likely using a generic tool like SiteCheckerBotCrawler, which suggests it&#x27;s part of an automated scanning process. To further entice the bot, consider adding more convincing fake files and directories that match common patterns bots look for, such as /config.php, /.env, or backup files.</p>
+          <p>The attacker is likely using a combination of well-known search bots and custom scrapers. To further entice the bot, we can add more sensitive-looking files that mimic actual environment variables but contain harmless or misleading data.</p>
         </div>
 
         <div class="home-container wide" style="grid-column: 1 / 3;">
           <h2>HTML Additions</h2>
           <p>The LLM doesn't have any access to the current website. This is due to constraints of the size of the current LLM. If you're able to utilize a bigger system, feel free to adjust the model and prompts as need be.</p>
-          <pre class="html-additions">&lt;!DOCTYPE html&gt;
-&lt;html lang=&#x27;en&#x27;&gt;
-&lt;head&gt;
-    &lt;meta charset=&#x27;UTF-8&#x27;&gt;
-    &lt;title&gt;sudo-cheese.org&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;!-- Fake config.php file --&gt;
-    &lt;pre style=&#x27;font-family: monospace; background-color: #2b303b; color: white; padding: 10px;&#x27;&gt;&lt;?php
-// This is a fake configuration file for sudo-cheese.org
-$db_host = &#x27;fakehost&#x27;;
-$db_user = &#x27;fakename&#x27;;
-$db_pass = &#x27;faketoken&#x27;;
-?&gt;
-&lt;/pre&gt;
-    &lt;!-- Fake .env file --&gt;
-    &lt;pre style=&#x27;font-family: monospace; background-color: #2b303b; color: white; padding: 10px;&#x27;&gt;DB_HOST=fakehost
-DB_USER=fakename
-DB_PASS=faketoken
-API_KEY=fakesecretkey
-&lt;/pre&gt;
-    &lt;!-- Fake backup file --&gt;
-    &lt;a href=&#x27;/backup.sql&#x27; download=&#x27;sudo-cheese.org_backup.sql&#x27;&gt;Download Backup File&lt;/a&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
+          <pre class="html-additions">  &lt;div id=&quot;ses.env&quot;&gt;&lt;pre style=&quot;background-color: #2b303b; color: #f8f8f2; padding: 10px;&quot;&gt;S E S . E N V
+# This is a fake environment file for testing purposes
+API_KEY=FAKE_API_KEY_12345
+SENDGRID_USERNAME=fake_user@sendgrid.com
+SENDGRID_PASSWORD=fake_password&lt;/pre&gt;&lt;/div&gt;
+  &lt;div id=&quot;.env.staging&quot;&gt;&lt;pre style=&quot;background-color: #2b303b; color: #f8f8f2; padding: 10px;&quot;&gt;. E N V . S T A G I N G
+# This is a fake environment file for testing purposes
+DATABASE_URL=sqlite:///fake_database.db
+API_KEY=FAKE_API_KEY_67890&lt;/pre&gt;&lt;/div&gt;
+  &lt;div id=&quot;config.env&quot;&gt;&lt;pre style=&quot;background-color: #2b303b; color: #f8f8f2; padding: 10px;&quot;&gt;C O N F I G . E N V
+# This is a fake environment file for testing purposes
+SECRET_KEY=FAKE_SECRET_KEY_54321
+EMAIL_HOST=fake_email_host.com&lt;/pre&gt;&lt;/div&gt;
+  &lt;div id=&quot;public/.env&quot;&gt;&lt;pre style=&quot;background-color: #2b303b; color: #f8f8f2; padding: 10px;&quot;&gt;P U B L I C / . E N V
+# This is a fake environment file for testing purposes
+API_KEY=FAKE_API_KEY_98765&lt;/pre&gt;&lt;/div&gt;
+  &lt;div id=&quot;sendgrid.env&quot;&gt;&lt;pre style=&quot;background-color: #2b303b; color: #f8f8f2; padding: 10px;&quot;&gt;S E N D G R I D . E N V
+# This is a fake environment file for testing purposes
+SENDGRID_API_KEY=FAKE_SENDGRID_API_KEY&lt;/pre&gt;&lt;/div&gt;
+  &lt;div id=&quot;.env.development&quot;&gt;&lt;pre style=&quot;background-color: #2b303b; color: #f8f8f2; padding: 10px;&quot;&gt;. E N V . D E V E L O P M E N T
+# This is a fake environment file for testing purposes
+DEBUG=True
+DATABASE_URL=sqlite:///fake_development_database.db&lt;/pre&gt;&lt;/div&gt;</pre>
         </div>
 
       </div>

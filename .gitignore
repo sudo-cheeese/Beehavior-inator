@@ -7,3 +7,4 @@ docs/build/
 *.pem
 .vscode/
 **/.DS_Store
+site/archive/
