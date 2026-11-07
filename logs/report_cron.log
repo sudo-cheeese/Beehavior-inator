@@ -77492,3 +77492,4 @@ httpx.ReadTimeout: timed out
   "html_additions": "    <pre><code class=\"language-bash\">#!/bin/bash\n# This is a fake .env file to mislead attackers\nexport DB_USER=admin\nexport DB_PASS=supersecurepassword123\nexport AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nexport AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</code></pre>\n    <p><strong>Warning:</strong> This is a dummy environment file. Please do not use real credentials.</p>\n    <h2>Fake SSH Key</h2>\n    <pre><code class=\"language-bash\">-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAw7L6gVZc4fG3Djx89yA5zr1eSxvEiX7tYb0UkF2q\n...\n-----END RSA PRIVATE KEY-----</code></pre>\n    <p><strong>Note:</strong> This is a fake SSH key. Do not use it for real connections.</p>"
 }
 2026-11-06 21:35:46,623 INFO: Dashboard updated successfully.
+2026-11-06 22:02:02,036 INFO: Analysing 6 event(s)...
